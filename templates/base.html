@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}ASMS{% endblock %} | Academic Success Management System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <style>
+    :root { --nav:#12355b; --accent:#f6b100; --ink:#172033; --muted:#6b7280; --bg:#f4f7fb; }
+    body { background:var(--bg); color:var(--ink); font-family:Inter,Segoe UI,Arial,sans-serif; }
+    .sidebar { width:270px; min-height:100vh; background:var(--nav); position:fixed; inset:0 auto 0 0; z-index:1000; }
+    .brand-mark { width:38px; height:38px; border-radius:8px; background:var(--accent); display:grid; place-items:center; color:#111827; }
+    .sidebar .nav-link { color:#dbe7f4; border-radius:8px; margin:.12rem .85rem; padding:.65rem .8rem; font-weight:500; }
+    .sidebar .nav-link:hover,.sidebar .nav-link.active { background:rgba(246,177,0,.16); color:#fff; }
+    .main { margin-left:270px; min-height:100vh; }
+    .topbar { height:64px; background:#fff; border-bottom:1px solid #e7edf5; }
+    .page-shell { padding:1.35rem; }
+    .page-title { background:#fff; border:1px solid #e7edf5; border-radius:8px; padding:1rem 1.15rem; margin-bottom:1rem; }
+    .card,.table-wrap { border:1px solid #e7edf5; border-radius:8px; box-shadow:0 8px 24px rgba(18,53,91,.05); }
+    .metric { min-height:118px; }
+    .metric-icon { width:44px; height:44px; border-radius:8px; display:grid; place-items:center; }
+    .auth-bg { min-height:100vh; background:linear-gradient(140deg,#12355b 0%,#1d4d7d 55%,#f6b100 160%); }
+    .btn-primary { --bs-btn-bg:#12355b; --bs-btn-border-color:#12355b; --bs-btn-hover-bg:#0e2b49; --bs-btn-hover-border-color:#0e2b49; }
+    .text-small { font-size:.86rem; }
+    @media (max-width: 900px) {
+      .sidebar { transform:translateX(-100%); transition:.2s ease; }
+      .sidebar.show { transform:translateX(0); }
+      .main { margin-left:0; }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+{% if user.is_authenticated %}
+<aside id="sidebar" class="sidebar">
+  <div class="p-3 border-bottom border-light border-opacity-10">
+    <div class="d-flex align-items-center gap-2">
+      <div class="brand-mark"><i class="bi bi-mortarboard-fill"></i></div>
+      <div>
+        <div class="text-white fw-bold">ASMS</div>
+        <div class="text-white-50 text-small">Academic success portal</div>
+      </div>
+    </div>
+  </div>
+  <nav class="py-3">
+    <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}"><i class="bi bi-grid-1x2 me-2"></i>Dashboard</a>
+    <a class="nav-link {% if 'assignment' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'assignment_list' %}"><i class="bi bi-journal-check me-2"></i>Assignments</a>
+    <a class="nav-link {% if 'study' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'study_session_list' %}"><i class="bi bi-calendar2-week me-2"></i>Study Planner</a>
+    <a class="nav-link {% if request.resolver_match.url_name == 'calendar' %}active{% endif %}" href="{% url 'calendar' %}"><i class="bi bi-calendar3 me-2"></i>Calendar</a>
+    <a class="nav-link {% if 'notification' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'notification_list' %}"><i class="bi bi-bell me-2"></i>Notifications</a>
+    <a class="nav-link {% if 'report' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'reports' %}"><i class="bi bi-file-earmark-pdf me-2"></i>Reports</a>
+    <div class="px-4 pt-3 pb-1 text-white-50 text-uppercase text-small">Account</div>
+    <a class="nav-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}" href="{% url 'profile' %}"><i class="bi bi-person me-2"></i>Profile</a>
+    <a class="nav-link text-warning" href="{% url 'logout' %}"><i class="bi bi-box-arrow-left me-2"></i>Logout</a>
+  </nav>
+</aside>
+<main class="main">
+  <div class="topbar d-flex align-items-center justify-content-between px-3">
+    <button class="btn btn-outline-secondary d-lg-none" type="button" onclick="document.getElementById('sidebar').classList.toggle('show')"><i class="bi bi-list"></i></button>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <a class="btn btn-sm btn-warning fw-semibold" href="{% url 'assignment_create' %}"><i class="bi bi-plus-lg me-1"></i>Assignment</a>
+      <a class="btn btn-sm btn-primary" href="{% url 'study_session_create' %}"><i class="bi bi-clock me-1"></i>Study</a>
+      <span class="text-muted text-small d-none d-md-inline">{{ user.get_full_name|default:user.username }}</span>
+    </div>
+  </div>
+  {% if messages %}
+  <div class="px-3 pt-3">
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags|default:'info' }} alert-dismissible fade show mb-2">{{ message }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button></div>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="page-shell">{% block content %}{% endblock %}</div>
+</main>
+{% else %}
+{% if messages %}
+<div class="position-fixed top-0 end-0 p-3" style="z-index:9999">
+  {% for message in messages %}<div class="alert alert-{{ message.tags|default:'info' }}">{{ message }}</div>{% endfor %}
+</div>
+{% endif %}
+{% block auth_content %}{% endblock %}
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

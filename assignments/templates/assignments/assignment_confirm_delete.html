@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Delete Assignment{% endblock %}
+{% block content %}
+<div class="page-title"><h1 class="h4 mb-1">Delete Assignment</h1><p class="text-muted mb-0">Confirm removal of this coursework item.</p></div>
+<div class="card p-4">
+  <p>Delete <strong>{{ assignment.title }}</strong> for <strong>{{ assignment.course_unit }}</strong>?</p>
+  <form method="post">
+    {% csrf_token %}
+    <button class="btn btn-danger" type="submit"><i class="bi bi-trash me-1"></i>Delete</button>
+    <a class="btn btn-outline-secondary" href="{% url 'assignment_detail' assignment.pk %}">Cancel</a>
+  </form>
+</div>
+{% endblock %}

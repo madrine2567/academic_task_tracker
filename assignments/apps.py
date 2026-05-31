@@ -1,0 +1,10 @@
+from django.apps import AppConfig
+
+
+class AssignmentsConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "assignments"
+    verbose_name = "Academic Success Management"
+
+    def ready(self):
+        from . import signals  # noqa: F401

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-title">
+  <h1 class="h4 mb-1">{{ title }}</h1>
+  <p class="text-muted mb-0">Capture coursework details, priority, lecturer, and deadline.</p>
+</div>
+<div class="card p-4">
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+    <div class="row g-3">
+      <div class="col-md-6"><label class="form-label">Title</label>{{ form.title }}{{ form.title.errors }}</div>
+      <div class="col-md-6"><label class="form-label">Course Unit</label>{{ form.course_unit }}{{ form.course_unit.errors }}</div>
+      <div class="col-md-6"><label class="form-label">Lecturer</label>{{ form.lecturer }}{{ form.lecturer.errors }}</div>
+      <div class="col-md-6"><label class="form-label">Deadline</label>{{ form.deadline }}{{ form.deadline.errors }}</div>
+      <div class="col-md-6"><label class="form-label">Priority</label>{{ form.priority }}</div>
+      <div class="col-md-6"><label class="form-label">Status</label>{{ form.status }}</div>
+      <div class="col-12"><label class="form-label">Description</label>{{ form.description }}</div>
+    </div>
+    <div class="d-flex gap-2 mt-4">
+      <button class="btn btn-primary" type="submit"><i class="bi bi-save me-1"></i>Save Assignment</button>
+      <a class="btn btn-outline-secondary" href="{% url 'assignment_list' %}">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

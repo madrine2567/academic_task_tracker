@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Reports{% endblock %}
+{% block content %}
+<div class="page-title"><h1 class="h4 mb-1">Reports</h1><p class="text-muted mb-0">Export assignment, progress, and study reports as PDF files.</p></div>
+<div class="row g-3 mb-3">
+  <div class="col-md-3"><div class="card p-3"><span class="text-muted">Assignments</span><strong class="fs-3">{{ total_assignments }}</strong></div></div>
+  <div class="col-md-3"><div class="card p-3"><span class="text-muted">Completed</span><strong class="fs-3 text-success">{{ completed_assignments }}</strong></div></div>
+  <div class="col-md-3"><div class="card p-3"><span class="text-muted">Pending</span><strong class="fs-3 text-warning">{{ pending_assignments }}</strong></div></div>
+  <div class="col-md-3"><div class="card p-3"><span class="text-muted">Study Hours</span><strong class="fs-3">{{ study_hours }}</strong></div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-4"><div class="card p-4 h-100"><h2 class="h5">Assignment Report</h2><p class="text-muted">All coursework records and deadlines.</p><a class="btn btn-primary mt-auto" href="{% url 'report_pdf' 'assignments' %}">Export PDF</a></div></div>
+  <div class="col-md-4"><div class="card p-4 h-100"><h2 class="h5">Progress Report</h2><p class="text-muted">Completion rate and academic progress summary.</p><a class="btn btn-primary mt-auto" href="{% url 'report_pdf' 'progress' %}">Export PDF</a></div></div>
+  <div class="col-md-4"><div class="card p-4 h-100"><h2 class="h5">Study Report</h2><p class="text-muted">Study sessions, duration, and notes.</p><a class="btn btn-primary mt-auto" href="{% url 'report_pdf' 'study' %}">Export PDF</a></div></div>
+</div>
+{% endblock %}
